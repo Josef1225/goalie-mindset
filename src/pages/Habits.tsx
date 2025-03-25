@@ -12,12 +12,14 @@ interface HabitsProps {
   habits: Habit[];
   onToggleHabit: (habitId: string) => void;
   onUpdateHabit: (habit: Habit) => void;
+  onDeleteHabit: (habitId: string) => void;
 }
 
 const Habits: React.FC<HabitsProps> = ({ 
   habits, 
   onToggleHabit, 
-  onUpdateHabit 
+  onUpdateHabit,
+  onDeleteHabit
 }) => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [habitToEdit, setHabitToEdit] = useState<Habit | undefined>(undefined);
@@ -61,6 +63,7 @@ const Habits: React.FC<HabitsProps> = ({
               habit={habit}
               onToggleCompletion={onToggleHabit}
               onEditHabit={handleEditHabit}
+              onDeleteHabit={onDeleteHabit}
               animationDelay={index}
             />
           ))}
