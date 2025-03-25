@@ -1,3 +1,4 @@
+
 import { createClient } from '@supabase/supabase-js';
 
 // Use the provided Supabase URL and API key
@@ -9,7 +10,28 @@ if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KE
   console.warn('Supabase environment variables are missing. Using hardcoded values.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Get the current hostname to use for redirects
+const getURL = () => {
+  // Check if we're running in the browser
+  if (typeof window !== 'undefined') {
+    const url = window.location.origin;
+    return url;
+  }
+  // Default fallback URL (should not be localhost in production)
+  return 'https://b84e1a1f-8d50-4ff9-b39e-781b5ffeee93.lovableproject.com';
+};
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+    flowType: 'pkce',
+    // This is crucial: set the site URL to the current origin
+    // This ensures redirects after authentication go to the right place
+    redirectTo: `${getURL()}/auth/login`,
+  },
+});
 
 // Types for database
 export type Database = {
