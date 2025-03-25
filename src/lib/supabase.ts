@@ -1,14 +1,12 @@
-
 import { createClient } from '@supabase/supabase-js';
 
-// Use default development values if environment variables are not set
-// Replace these with your actual Supabase values for development
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-supabase-project.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
+// Use the provided Supabase URL and API key
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://ergbuysiblmxkhvzarnl.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyZ2J1eXNpYmxteGtodnphcm5sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4OTM3NzIsImV4cCI6MjA1ODQ2OTc3Mn0.WnrIaBOPzzXQfrmltlhyD8d9xjfKc17C3jSLlF-BibY';
 
 // For production, we still want to warn about missing environment variables
 if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-  console.warn('Supabase environment variables are missing. Using development values.');
+  console.warn('Supabase environment variables are missing. Using hardcoded values.');
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
