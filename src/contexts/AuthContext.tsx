@@ -32,6 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth state changed: ", _event, session?.user?.email);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -46,6 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       
       if (error) {
+        console.error("Sign in error:", error);
         toast({
           title: "Error signing in",
           description: error.message,
@@ -69,15 +71,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (email: string, password: string) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { error, data } = await supabase.auth.signUp({ 
+        email, 
+        password,
+        options: {
+          emailRedirectTo: window.location.origin + '/auth/login',
+        }
+      });
+      
+      console.log("Sign up result:", data);
       
       if (error) {
+        console.error("Sign up error:", error);
         toast({
           title: "Error signing up",
           description: error.message,
           variant: "destructive",
         });
         throw error;
+      }
+      
+      // If Supabase is configured to not require email confirmation
+      if (data?.session) {
+        setSession(data.session);
+        setUser(data.session.user);
       }
       
       toast({
@@ -116,7 +133,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const resetPassword = async (email: string) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/auth/login',
+      });
       
       if (error) {
         toast({

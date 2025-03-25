@@ -1,4 +1,3 @@
-
 import { createClient } from '@supabase/supabase-js';
 
 // Use the provided Supabase URL and API key
@@ -27,10 +26,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     detectSessionInUrl: true,
     flowType: 'pkce',
-    // This is crucial: set the site URL to the current origin
-    // This ensures redirects after authentication go to the right place
-    redirectTo: `${getURL()}/auth/login`,
-  },
+  }
 });
 
 // Types for database
