@@ -2,8 +2,17 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { HomeIcon, ListTodoIcon, ActivityIcon, PlusIcon } from 'lucide-react';
+import { HomeIcon, ListTodoIcon, ActivityIcon, PlusIcon, User2Icon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface NavbarProps {
   onCreateHabit: () => void;
@@ -12,6 +21,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ onCreateHabit }) => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const { user, signOut } = useAuth();
 
   const navItems = [
     {
@@ -59,6 +69,31 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateHabit }) => {
           >
             <PlusIcon className="h-5 w-5" />
           </Button>
+
+          {/* User profile dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="flex flex-col items-center justify-center px-4 py-2 rounded-md"
+              >
+                <User2Icon className="h-5 w-5" />
+                <span className="text-xs mt-1">Profile</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem disabled className="flex flex-col items-start">
+                <span className="text-xs text-muted-foreground">Signed in as:</span>
+                <span>{user?.email}</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => signOut()}>
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

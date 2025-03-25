@@ -5,11 +5,18 @@ import { isHabitCompletedOnDate, getTodayDate } from '@/utils/habitUtils';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { CheckIcon, MoreHorizontalIcon } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface HabitCardProps {
   habit: Habit;
   onToggleCompletion: (habitId: string) => void;
   onEditHabit?: (habit: Habit) => void;
+  onDeleteHabit?: (habitId: string) => void;
   animationDelay?: number;
 }
 
@@ -17,6 +24,7 @@ const HabitCard: React.FC<HabitCardProps> = ({
   habit,
   onToggleCompletion,
   onEditHabit,
+  onDeleteHabit,
   animationDelay = 0,
 }) => {
   const isCompleted = isHabitCompletedOnDate(habit, getTodayDate());
@@ -56,9 +64,32 @@ const HabitCard: React.FC<HabitCardProps> = ({
           </div>
         </div>
         
-        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEditHabit?.(habit)}>
-          <MoreHorizontalIcon className="h-4 w-4" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreHorizontalIcon className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {onEditHabit && (
+              <DropdownMenuItem onClick={() => onEditHabit(habit)}>
+                Edit
+              </DropdownMenuItem>
+            )}
+            {onDeleteHabit && (
+              <DropdownMenuItem 
+                onClick={() => {
+                  if (window.confirm(`Are you sure you want to delete "${habit.name}"?`)) {
+                    onDeleteHabit(habit.id);
+                  }
+                }}
+                className="text-destructive focus:text-destructive"
+              >
+                Delete
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       
       <div className="flex items-center justify-between mt-4">
