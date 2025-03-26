@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import { Habit } from '@/types/types';
 import HabitCard from '@/components/HabitCard';
 import CreateHabitDialog from '@/components/CreateHabitDialog';
+import ProgressAnalysisDialog from '@/components/ProgressAnalysisDialog';
 import { Button } from '@/components/ui/button';
-import { PlusIcon } from 'lucide-react';
+import { PlusIcon, BarChartIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { useAIProgressAnalysis } from '@/hooks/useAIProgressAnalysis';
 
 interface HabitsProps {
   habits: Habit[];
@@ -23,7 +25,15 @@ const Habits: React.FC<HabitsProps> = ({
 }) => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [habitToEdit, setHabitToEdit] = useState<Habit | undefined>(undefined);
+  const [analysisDialogOpen, setAnalysisDialogOpen] = useState(false);
   const { toast } = useToast();
+  
+  const { 
+    loading: analysisLoading, 
+    analysis, 
+    error: analysisError, 
+    getProgressAnalysis 
+  } = useAIProgressAnalysis();
 
   const handleEditHabit = (habit: Habit) => {
     setHabitToEdit(habit);
@@ -37,11 +47,27 @@ const Habits: React.FC<HabitsProps> = ({
       description: `${updatedHabit.name} has been updated.`,
     });
   };
+  
+  const handleAnalyzeProgress = () => {
+    getProgressAnalysis(habits);
+    setAnalysisDialogOpen(true);
+  };
 
   return (
     <div className="py-8 space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">My Habits</h1>
+        
+        {habits.length > 0 && (
+          <Button
+            variant="outline"
+            className="flex items-center space-x-1"
+            onClick={handleAnalyzeProgress}
+          >
+            <BarChartIcon className="h-4 w-4 mr-1" />
+            <span>Analyze Progress</span>
+          </Button>
+        )}
       </div>
       
       {habits.length === 0 ? (
@@ -75,6 +101,14 @@ const Habits: React.FC<HabitsProps> = ({
         onOpenChange={setEditDialogOpen}
         onSave={handleSaveHabit}
         initialHabit={habitToEdit}
+      />
+      
+      <ProgressAnalysisDialog
+        open={analysisDialogOpen}
+        onOpenChange={setAnalysisDialogOpen}
+        analysis={analysis}
+        loading={analysisLoading}
+        error={analysisError}
       />
     </div>
   );
