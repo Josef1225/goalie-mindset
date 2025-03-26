@@ -7,7 +7,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 210 40% 98%;
     --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
@@ -79,6 +79,7 @@
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   }
 
+  /* Card animations */
   .habit-card-enter {
     opacity: 0;
     transform: scale(0.95);
@@ -98,6 +99,7 @@
     transition: opacity 300ms, transform 300ms;
   }
 
+  /* Page transitions */
   .page-transition {
     position: relative;
     will-change: transform, opacity;
@@ -121,5 +123,20 @@
   .page-transition-exit-active {
     opacity: 0;
     transition: opacity 200ms;
+  }
+
+  /* Modern card styles */
+  .modern-card {
+    @apply bg-white rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-all duration-300;
+  }
+
+  /* Button hover effects */
+  .btn-hover-effect {
+    @apply transition-all duration-300 hover:translate-y-[-2px] hover:shadow-md;
+  }
+  
+  /* Glass effect for dialogs and modals */
+  .glass-effect {
+    @apply bg-white/80 backdrop-blur-md border border-white/20;
   }
 }

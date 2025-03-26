@@ -26,11 +26,32 @@ const Layout: React.FC<LayoutProps> = ({ habits, onAddHabit }) => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container max-w-md mx-auto px-4 pb-20">
-        <Outlet />
+      <div className="mx-auto bg-gradient-to-b from-blue-50 to-background">
+        {/* Desktop layout with sidebar-like navigation */}
+        <div className="flex">
+          {/* Side navigation for desktop */}
+          <div className="hidden lg:block w-64 h-screen fixed left-0 border-r border-border/30 bg-white/70 backdrop-blur-sm">
+            <div className="p-6">
+              <h1 className="text-2xl font-bold text-primary mb-8">HabitTracker</h1>
+              <nav className="space-y-1">
+                <Navbar onCreateHabit={() => setCreateDialogOpen(true)} />
+              </nav>
+            </div>
+          </div>
+          
+          {/* Main content area */}
+          <div className="w-full lg:ml-64 p-6">
+            <div className="max-w-5xl mx-auto">
+              <Outlet />
+            </div>
+          </div>
+        </div>
       </div>
       
-      <Navbar onCreateHabit={() => setCreateDialogOpen(true)} />
+      {/* Mobile bottom navigation */}
+      <div className="lg:hidden">
+        <Navbar onCreateHabit={() => setCreateDialogOpen(true)} />
+      </div>
       
       <CreateHabitDialog
         open={createDialogOpen}
