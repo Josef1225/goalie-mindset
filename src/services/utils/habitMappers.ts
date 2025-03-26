@@ -10,7 +10,6 @@ export const mapDbHabitToAppHabit = (dbHabit: any): Habit => {
     icon: dbHabit.icon || undefined,
     color: dbHabit.color || undefined,
     frequency: dbHabit.frequency,
-    timesPerDay: dbHabit.times_per_day || 1, // Default to 1 if not specified
     timeOfDay: dbHabit.time_of_day || undefined,
     reminderTime: dbHabit.reminder_time || undefined,
     startDate: dbHabit.start_date,
@@ -32,7 +31,6 @@ export const mapAppHabitToDbHabit = (habit: Habit, userId: string) => {
     icon: habit.icon || null,
     color: habit.color || null,
     frequency: habit.frequency,
-    times_per_day: habit.timesPerDay || 1,
     time_of_day: habit.timeOfDay || null,
     reminder_time: habit.reminderTime || null,
     start_date: habit.startDate,
