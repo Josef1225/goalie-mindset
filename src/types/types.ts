@@ -11,6 +11,7 @@ export interface Habit {
     dates?: number[]; // 1-31 for monthly
     customDays?: number; // For custom frequency (every X days)
   };
+  timesPerDay?: number; // New field to track how many times per day
   timeOfDay?: {
     morning?: boolean;
     afternoon?: boolean;

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Form, FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
 import { Habit } from '@/types/types';
 import { generateId, getTodayDate } from '@/utils/habitUtils';
 
@@ -20,6 +21,7 @@ const defaultHabit: Omit<Habit, 'id' | 'createdAt'> = {
   name: '',
   description: '',
   frequency: { type: 'daily' },
+  timesPerDay: 1,
   startDate: getTodayDate(),
   completedDates: [],
   streak: 0,
@@ -40,6 +42,7 @@ const CreateHabitDialog: React.FC<CreateHabitDialogProps> = ({
       icon: initialHabit.icon,
       color: initialHabit.color,
       frequency: initialHabit.frequency,
+      timesPerDay: initialHabit.timesPerDay || 1,
       timeOfDay: initialHabit.timeOfDay,
       reminderTime: initialHabit.reminderTime,
       startDate: initialHabit.startDate,
@@ -53,6 +56,18 @@ const CreateHabitDialog: React.FC<CreateHabitDialogProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    let numValue = parseInt(value, 10);
+    
+    // Ensure we have a valid number that's at least 1
+    if (isNaN(numValue) || numValue < 1) {
+      numValue = 1;
+    }
+    
+    setFormData((prev) => ({ ...prev, [name]: numValue }));
   };
 
   const handleFrequencyChange = (value: string) => {
@@ -122,6 +137,22 @@ const CreateHabitDialog: React.FC<CreateHabitDialogProps> = ({
                 <SelectItem value="custom">Custom</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="timesPerDay">Times Per Day</Label>
+            <Input
+              id="timesPerDay"
+              name="timesPerDay"
+              type="number"
+              min="1"
+              value={formData.timesPerDay || 1}
+              onChange={handleNumberChange}
+              placeholder="1"
+              className="rounded-md"
+            />
+            <p className="text-xs text-muted-foreground">
+              How many times should this habit be completed each day?
+            </p>
           </div>
         </div>
         <DialogFooter>

@@ -58,21 +58,27 @@ export const toggleHabitCompletion = (habit: Habit): Habit => {
   const todayDate = getTodayDate();
   let updatedCompletedDates = [...habit.completedDates];
   let updatedStreak = habit.streak;
+  const timesPerDay = habit.timesPerDay || 1;
+  
+  // Count how many times completed today
+  const todayCompletions = updatedCompletedDates.filter(date => date === todayDate).length;
 
-  if (isHabitCompletedOnDate(habit, todayDate)) {
-    // Remove today from completed dates
-    updatedCompletedDates = updatedCompletedDates.filter(
-      (date) => date !== todayDate
-    );
+  if (todayCompletions >= timesPerDay) {
+    // Remove all completions for today
+    updatedCompletedDates = updatedCompletedDates.filter(date => date !== todayDate);
     
     // Decrement streak only if it's greater than 0
     if (updatedStreak > 0) {
       updatedStreak -= 1;
     }
   } else {
-    // Add today to completed dates
+    // Add another completion for today
     updatedCompletedDates.push(todayDate);
-    updatedStreak += 1;
+    
+    // Only increment streak if this completes the required times per day
+    if (todayCompletions + 1 >= timesPerDay) {
+      updatedStreak += 1;
+    }
   }
 
   return {
