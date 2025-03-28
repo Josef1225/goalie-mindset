@@ -1,6 +1,5 @@
-
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Habit } from '@/types/types';
 import Dashboard from './Dashboard';
 import Habits from './Habits';
@@ -110,10 +109,11 @@ const Index = () => {
     },
   });
   
-  // Redirect to dashboard if we're at the base URL
-  useEffect(() => {
+  // Redirect to dashboard if we're at the base dashboard URL
+  React.useEffect(() => {
     if (window.location.pathname === '/dashboard') {
-      navigate('/dashboard');
+      // Keep us at /dashboard as it's a valid route
+      console.log('On dashboard route');
     }
   }, [navigate]);
   
