@@ -25,12 +25,9 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const SignUp = () => {
-  const { signUp, signIn, loading } = useAuth();
+  const { signUp, loading } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = React.useState<string | null>(null);
-  const [success, setSuccess] = React.useState(false);
-  const [emailSent, setEmailSent] = React.useState(false);
-  const [signingIn, setSigningIn] = React.useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -45,89 +42,18 @@ const SignUp = () => {
   const onSubmit = async (values: FormValues) => {
     try {
       setError(null);
-      // First, attempt to sign up
+      // Sign up and immediately sign in the user
       await signUp(values.email, values.password, values.name);
-      setEmailSent(true);
-      setSuccess(true);
-    } catch (err) {
-      if (err instanceof Error) {
-        // If the error is about the user already existing, try to sign in
-        if (err.message.includes('User already registered')) {
-          try {
-            setSigningIn(true);
-            await signIn(values.email, values.password);
-            navigate('/dashboard');
-            return;
-          } catch (signInErr) {
-            if (signInErr instanceof Error) {
-              setError(signInErr.message);
-            } else {
-              setError('Failed to sign in with existing account');
-            }
-            setSigningIn(false);
-          }
-        } else {
-          setError(err.message);
-        }
-      } else {
-        setError('An unexpected error occurred');
-      }
-    }
-  };
-
-  const handleBypassConfirmation = async () => {
-    try {
-      const email = form.getValues('email');
-      const password = form.getValues('password');
-      
-      if (!email || !password) {
-        setError('Please enter your email and password to continue');
-        return;
-      }
-
-      setSigningIn(true);
-      await signIn(email, password);
+      // Redirect to dashboard upon successful signup/signin
       navigate('/dashboard');
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError('Failed to sign in');
+        setError('An unexpected error occurred');
       }
-      setSigningIn(false);
     }
   };
-
-  if (success) {
-    return (
-      <Card className="border-border/40 shadow-sm">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Check your email</CardTitle>
-          <CardDescription>
-            We've sent you a confirmation link. Please check your email to complete the sign up process.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">
-            If you don't receive the email within a few minutes, check your spam folder or try signing in directly.
-          </p>
-          <Button 
-            onClick={handleBypassConfirmation} 
-            variant="outline" 
-            className="w-full mb-2"
-            disabled={signingIn}
-          >
-            {signingIn ? 'Signing in...' : 'Continue without confirmation'}
-          </Button>
-        </CardContent>
-        <CardFooter className="pt-0">
-          <Button asChild variant="outline" className="w-full">
-            <Link to="/auth/login">Back to login</Link>
-          </Button>
-        </CardFooter>
-      </Card>
-    );
-  }
 
   return (
     <Card className="border-border/40 shadow-sm">
@@ -196,8 +122,8 @@ const SignUp = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={loading || signingIn}>
-              {loading ? 'Creating account...' : signingIn ? 'Signing in...' : 'Sign up'}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Creating account...' : 'Sign up'}
             </Button>
           </form>
         </Form>

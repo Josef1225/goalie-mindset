@@ -76,47 +76,56 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Prepare metadata with name if provided
       const metadata = name ? { name } : undefined;
       
-      const { error, data } = await supabase.auth.signUp({ 
+      // First, try to sign up the user
+      const { error: signUpError, data: signUpData } = await supabase.auth.signUp({ 
         email, 
         password,
         options: {
           data: metadata,
-          // Removed emailRedirectTo to bypass email verification
         }
       });
       
-      console.log("Sign up result:", data);
-      
-      if (error) {
-        console.error("Sign up error:", error);
+      // If there's an error with sign up that's not just "user already exists"
+      if (signUpError && !signUpError.message.includes('User already registered')) {
+        console.error("Sign up error:", signUpError);
         toast({
           title: "Error signing up",
-          description: error.message,
+          description: signUpError.message,
           variant: "destructive",
         });
-        throw error;
+        throw signUpError;
       }
       
-      // If a session is returned, update the session and user state
-      if (data?.session) {
-        setSession(data.session);
-        setUser(data.session.user);
+      // If user already exists or sign up was successful, try to sign in directly
+      const { error: signInError, data: signInData } = await supabase.auth.signInWithPassword({ 
+        email, 
+        password 
+      });
+      
+      if (signInError) {
+        console.error("Auto sign in error:", signInError);
+        toast({
+          title: "Error signing in",
+          description: signInError.message,
+          variant: "destructive",
+        });
+        throw signInError;
+      }
+      
+      // Update session and user state with sign in data
+      if (signInData?.session) {
+        setSession(signInData.session);
+        setUser(signInData.session.user);
         
         toast({
           title: "Success",
-          description: "Signed up successfully!",
-        });
-      } else {
-        // This should rarely happen now that email verification is removed
-        toast({
-          title: "Success",
-          description: "Account created! Please sign in.",
+          description: "Signed up and logged in successfully!",
         });
       }
       
-      return data;
+      return signInData;
     } catch (error) {
-      console.error('Error signing up:', error);
+      console.error('Error in sign up process:', error);
       throw error;
     } finally {
       setLoading(false);
