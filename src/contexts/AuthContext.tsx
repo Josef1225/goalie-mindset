@@ -81,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
         options: {
           data: metadata,
-          emailRedirectTo: window.location.origin + '/auth/login',
+          // Removed emailRedirectTo to bypass email verification
         }
       });
       
@@ -97,16 +97,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw error;
       }
       
-      // If Supabase is configured to not require email confirmation
+      // If a session is returned, update the session and user state
       if (data?.session) {
         setSession(data.session);
         setUser(data.session.user);
+        
+        toast({
+          title: "Success",
+          description: "Signed up successfully!",
+        });
+      } else {
+        // This should rarely happen now that email verification is removed
+        toast({
+          title: "Success",
+          description: "Account created! Please sign in.",
+        });
       }
-      
-      toast({
-        title: "Success",
-        description: "Check your email for the confirmation link!",
-      });
       
       return data;
     } catch (error) {

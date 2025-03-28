@@ -23,19 +23,20 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateHabit }) => {
   const currentPath = location.pathname;
   const { user, signOut } = useAuth();
 
+  // Updated paths to match the routes defined in Index.tsx
   const navItems = [
     {
-      path: '/',
+      path: '/dashboard',
       icon: <HomeIcon className="h-5 w-5" />,
       label: 'Today',
     },
     {
-      path: '/habits',
+      path: '/dashboard/habits',
       icon: <ListTodoIcon className="h-5 w-5" />,
       label: 'Habits',
     },
     {
-      path: '/stats',
+      path: '/dashboard/stats',
       icon: <ActivityIcon className="h-5 w-5" />,
       label: 'Stats',
     },
@@ -72,7 +73,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateHabit }) => {
         </Button>
         
         <Link
-          to="/stats"
+          to="/dashboard/stats"
           className="flex items-center px-4 py-3 rounded-lg transition-colors text-muted-foreground hover:bg-secondary hover:text-foreground"
           onClick={(e) => {
             e.preventDefault();
