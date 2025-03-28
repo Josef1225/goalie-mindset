@@ -25,25 +25,6 @@ const ProgressAnalysisDialog: React.FC<ProgressAnalysisDialogProps> = ({
   loading,
   error,
 }) => {
-  // Function to format the analysis text with proper styling
-  const formatAnalysis = (text: string) => {
-    if (!text) return '';
-    
-    // Replace line breaks with paragraph tags
-    let formattedText = text
-      .split('\n\n')
-      .map(paragraph => `<p>${paragraph}</p>`)
-      .join('');
-    
-    // Bold section headers (like "OVERALL PROGRESS:")
-    formattedText = formattedText.replace(
-      /([A-Z\s]+):/g, 
-      '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>'
-    );
-    
-    return formattedText;
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl glass-effect">
@@ -73,8 +54,8 @@ const ProgressAnalysisDialog: React.FC<ProgressAnalysisDialogProps> = ({
           )}
           
           {!loading && !error && analysis && (
-            <div className="prose prose-lg max-w-none p-6 bg-white/50 rounded-xl border border-border/40">
-              <div dangerouslySetInnerHTML={{ __html: formatAnalysis(analysis) }} />
+            <div className="prose prose-lg max-w-none p-4 bg-white/50 rounded-xl border border-border/40">
+              <div dangerouslySetInnerHTML={{ __html: analysis.replace(/\n/g, '<br />') }} />
             </div>
           )}
           
