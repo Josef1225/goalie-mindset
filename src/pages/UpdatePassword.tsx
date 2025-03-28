@@ -13,30 +13,37 @@ import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const formSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
+  confirmPassword: z.string().min(6, { message: 'Password must be at least 6 characters' }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-const Login = () => {
-  const { signIn, loading } = useAuth();
+const UpdatePassword = () => {
+  const { updatePassword, loading } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = React.useState<string | null>(null);
+  const [success, setSuccess] = React.useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
   const onSubmit = async (values: FormValues) => {
     try {
       setError(null);
-      await signIn(values.email, values.password);
-      navigate('/dashboard');
+      await updatePassword(values.password);
+      setSuccess(true);
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 3000);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -46,11 +53,29 @@ const Login = () => {
     }
   };
 
+  if (success) {
+    return (
+      <Card className="border-border/40 shadow-sm">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold">Password Updated</CardTitle>
+          <CardDescription>
+            Your password has been successfully updated. You'll be redirected to the dashboard shortly.
+          </CardDescription>
+        </CardHeader>
+        <CardFooter className="pt-0">
+          <Button asChild className="w-full">
+            <Link to="/dashboard">Go to Dashboard</Link>
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
+
   return (
     <Card className="border-border/40 shadow-sm">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Login</CardTitle>
-        <CardDescription>Enter your email and password to login to your account</CardDescription>
+        <CardTitle className="text-2xl font-bold">Update Password</CardTitle>
+        <CardDescription>Enter a new password for your account</CardDescription>
       </CardHeader>
       <CardContent>
         {error && (
@@ -63,12 +88,12 @@ const Login = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="email"
+              name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>New Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="your@email.com" {...field} />
+                    <Input type="password" placeholder="••••••••" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -76,10 +101,10 @@ const Login = () => {
             />
             <FormField
               control={form.control}
-              name="password"
+              name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Confirm New Password</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="••••••••" {...field} />
                   </FormControl>
@@ -88,21 +113,16 @@ const Login = () => {
               )}
             />
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? 'Updating password...' : 'Update Password'}
             </Button>
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="flex flex-col items-center gap-4 p-6 pt-0">
+      <CardFooter className="flex justify-center p-6 pt-0">
         <div className="text-sm text-muted-foreground">
-          <Link to="/auth/reset-password" className="hover:text-primary underline underline-offset-4">
-            Forgot your password?
-          </Link>
-        </div>
-        <div className="text-sm text-muted-foreground">
-          Don't have an account?{' '}
-          <Link to="/auth/signup" className="hover:text-primary underline underline-offset-4">
-            Sign up
+          Remember your password?{' '}
+          <Link to="/auth/login" className="hover:text-primary underline underline-offset-4">
+            Login
           </Link>
         </div>
       </CardFooter>
@@ -110,4 +130,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default UpdatePassword;

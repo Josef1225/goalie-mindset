@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
+import Home from "./pages/Home";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
@@ -22,23 +23,30 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   
   // Redirect to login if not authenticated
   if (!user) {
-    return <Navigate to="/auth/login" replace />;
+    return <Navigate to="/" replace />;
   }
   
   return <>{children}</>;
 };
 
 const AppRoutes = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  
+  if (loading) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
   
   return (
     <Routes>
-      {/* Auth routes */}
-      <Route path="/auth/*" element={!user ? <Auth /> : <Navigate to="/" replace />} />
+      {/* Public Home Page */}
+      <Route path="/" element={!user ? <Home /> : <Navigate to="/dashboard" replace />} />
       
-      {/* Protected routes */}
+      {/* Auth routes */}
+      <Route path="/auth/*" element={!user ? <Auth /> : <Navigate to="/dashboard" replace />} />
+      
+      {/* Protected routes - redirect to dashboard instead of root */}
       <Route 
-        path="/*" 
+        path="/dashboard/*" 
         element={
           <ProtectedRoute>
             <Index />

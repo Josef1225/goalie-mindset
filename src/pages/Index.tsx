@@ -110,10 +110,10 @@ const Index = () => {
     },
   });
   
-  // Redirect to dashboard if we're at the root route
+  // Redirect to dashboard if we're at the base URL
   useEffect(() => {
-    if (window.location.pathname === '/') {
-      navigate('/');
+    if (window.location.pathname === '/dashboard') {
+      navigate('/dashboard');
     }
   }, [navigate]);
   

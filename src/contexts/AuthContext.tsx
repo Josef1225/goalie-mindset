@@ -1,5 +1,5 @@
 
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Session, User } from '@supabase/supabase-js';
 import { useToast } from '@/hooks/use-toast';
@@ -9,9 +9,10 @@ type AuthContextType = {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, name?: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  updatePassword: (password: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -41,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = useCallback(async (email: string, password: string) => {
     try {
       setLoading(true);
       const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -66,15 +67,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = useCallback(async (email: string, password: string, name?: string) => {
     try {
       setLoading(true);
+      
+      // Prepare metadata with name if provided
+      const metadata = name ? { name } : undefined;
+      
       const { error, data } = await supabase.auth.signUp({ 
         email, 
         password,
         options: {
+          data: metadata,
           emailRedirectTo: window.location.origin + '/auth/login',
         }
       });
@@ -101,15 +107,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         title: "Success",
         description: "Check your email for the confirmation link!",
       });
+      
+      return data;
     } catch (error) {
       console.error('Error signing up:', error);
       throw error;
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     try {
       setLoading(true);
       const { error } = await supabase.auth.signOut();
@@ -122,19 +130,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
         throw error;
       }
+      
+      toast({
+        title: "Success",
+        description: "Signed out successfully!",
+      });
     } catch (error) {
       console.error('Error signing out:', error);
       throw error;
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
-  const resetPassword = async (email: string) => {
+  const resetPassword = useCallback(async (email: string) => {
     try {
       setLoading(true);
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/auth/login',
+        redirectTo: window.location.origin + '/auth/update-password',
       });
       
       if (error) {
@@ -156,10 +169,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  const updatePassword = useCallback(async (password: string) => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.updateUser({ password });
+      
+      if (error) {
+        toast({
+          title: "Error updating password",
+          description: error.message,
+          variant: "destructive",
+        });
+        throw error;
+      }
+      
+      toast({
+        title: "Success",
+        description: "Your password has been updated!",
+      });
+    } catch (error) {
+      console.error('Error updating password:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
 
   return (
-    <AuthContext.Provider value={{ session, user, loading, signIn, signUp, signOut, resetPassword }}>
+    <AuthContext.Provider 
+      value={{ 
+        session, 
+        user, 
+        loading, 
+        signIn, 
+        signUp, 
+        signOut, 
+        resetPassword,
+        updatePassword
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

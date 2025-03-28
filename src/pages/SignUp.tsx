@@ -11,9 +11,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useAuth } from '@/contexts/AuthContext';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { supabase } from '@/lib/supabase';
 
 const formSchema = z.object({
+  name: z.string().min(2, { message: 'Name must be at least 2 characters' }).optional(),
   email: z.string().email({ message: 'Please enter a valid email address' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
   confirmPassword: z.string().min(6, { message: 'Password must be at least 6 characters' }),
@@ -35,6 +35,7 @@ const SignUp = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -45,7 +46,7 @@ const SignUp = () => {
     try {
       setError(null);
       // First, attempt to sign up
-      await signUp(values.email, values.password);
+      await signUp(values.email, values.password, values.name);
       setEmailSent(true);
       setSuccess(true);
     } catch (err) {
@@ -55,7 +56,7 @@ const SignUp = () => {
           try {
             setSigningIn(true);
             await signIn(values.email, values.password);
-            navigate('/');
+            navigate('/dashboard');
             return;
           } catch (signInErr) {
             if (signInErr instanceof Error) {
@@ -86,7 +87,7 @@ const SignUp = () => {
 
       setSigningIn(true);
       await signIn(email, password);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -132,7 +133,7 @@ const SignUp = () => {
     <Card className="border-border/40 shadow-sm">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
-        <CardDescription>Enter your email and create a password to sign up</CardDescription>
+        <CardDescription>Enter your details to sign up for a new account</CardDescription>
       </CardHeader>
       <CardContent>
         {error && (
@@ -143,6 +144,19 @@ const SignUp = () => {
         )}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name (Optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Your name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"
