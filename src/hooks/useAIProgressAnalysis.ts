@@ -21,48 +21,74 @@ export function useAIProgressAnalysis() {
         startDate: habit.startDate,
       }));
       
-      // Create the prompt for the AI
-      const prompt = `Please analyze my habit tracking data and provide encouraging feedback on my progress:
-      
-${JSON.stringify(habitsData, null, 2)}
-
-Focus on:
-1. Streaks and consistency
-2. Overall progress
-3. Suggestions for improvement
-4. Encouraging comments
-      
-Keep your response friendly, supportive, and concise (maximum 150 words).`;
-
-      // Make the API request to OpenRouter
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer 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',
-          'HTTP-Referer': window.location.href,
-          'X-Title': 'Habit Tracker',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'deepseek/deepseek-r1:free',
-          messages: [{ role: 'user', content: prompt }],
-        }),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      const analysisText = data.choices?.[0]?.message?.content || 'No analysis available.';
-      
+      // Instead of an external API, generate the analysis locally
+      const analysisText = generateLocalAnalysis(habitsData);
       setAnalysis(analysisText);
     } catch (error) {
-      console.error('Error getting AI analysis:', error);
-      setError('Failed to get progress analysis. Please try again later.');
+      console.error('Error generating analysis:', error);
+      setError('Failed to generate progress analysis. Please try again later.');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Local analysis generation function
+  const generateLocalAnalysis = (habitsData: any[]) => {
+    if (habitsData.length === 0) {
+      return "You haven't created any habits yet. Start by adding some habits to track your progress!";
+    }
+
+    // Find the habit with the highest streak
+    const topStreakHabit = [...habitsData].sort((a, b) => b.streak - a.streak)[0];
+    
+    // Find the habit with the most completions
+    const topCompletionsHabit = [...habitsData].sort((a, b) => b.totalCompletions - a.totalCompletions)[0];
+    
+    // Calculate average streak
+    const averageStreak = habitsData.reduce((sum, habit) => sum + habit.streak, 0) / habitsData.length;
+    
+    // Calculate total completions across all habits
+    const totalCompletions = habitsData.reduce((sum, habit) => sum + habit.totalCompletions, 0);
+    
+    // Generate a personalized analysis message
+    let analysis = `## Your Habit Progress Summary\n\n`;
+    
+    // Add streak information
+    analysis += `You're doing great! Your best streak is **${topStreakHabit.streak} days** with "${topStreakHabit.name}". `;
+    
+    if (averageStreak > 3) {
+      analysis += `Your average streak of ${averageStreak.toFixed(1)} days across all habits shows consistent commitment.\n\n`;
+    } else {
+      analysis += `Keep going to increase your average streak of ${averageStreak.toFixed(1)} days.\n\n`;
+    }
+    
+    // Add completions information
+    analysis += `You've completed habits a total of **${totalCompletions} times**, with "${topCompletionsHabit.name}" being your most completed habit (${topCompletionsHabit.totalCompletions} times).\n\n`;
+    
+    // Add encouragement
+    if (totalCompletions > 10) {
+      analysis += `**Impressive progress!** Your consistency is building strong foundations for these habits.\n\n`;
+    } else {
+      analysis += `**Good start!** Remember that consistency is key to building lasting habits.\n\n`;
+    }
+    
+    // Add suggestions
+    analysis += `### Suggestions for improvement:\n\n`;
+    
+    if (habitsData.some(h => h.streak === 0)) {
+      analysis += `- Focus on restarting habits with zero streaks\n`;
+    }
+    
+    if (habitsData.some(h => h.streak > 0 && h.streak < 3)) {
+      analysis += `- Pay extra attention to newer habits (streaks under 3 days) as they're still forming\n`;
+    }
+    
+    analysis += `- Consider adding reminder times to any habits you frequently forget\n`;
+    analysis += `- Celebrate your achievements, even small ones count!\n\n`;
+    
+    analysis += `Keep up the great work! Consistency over time leads to transformative results.`;
+    
+    return analysis;
   };
 
   return {
