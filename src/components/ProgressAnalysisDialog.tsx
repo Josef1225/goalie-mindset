@@ -69,7 +69,7 @@ const ProgressAnalysisDialog: React.FC<ProgressAnalysisDialogProps> = ({
             </div>
           )}
           
-          {error && !analysis && (
+          {error && (
             <div className="p-6 bg-destructive/10 text-destructive rounded-xl border border-destructive/20">
               <p className="font-medium mb-2">Error</p>
               <p>{error}</p>
