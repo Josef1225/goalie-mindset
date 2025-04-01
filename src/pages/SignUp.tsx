@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const formSchema = z.object({
@@ -28,6 +28,7 @@ const SignUp = () => {
   const { signUp, loading } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = React.useState<string | null>(null);
+  const [success, setSuccess] = React.useState<boolean>(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -42,10 +43,18 @@ const SignUp = () => {
   const onSubmit = async (values: FormValues) => {
     try {
       setError(null);
-      // Sign up and immediately sign in the user
-      await signUp(values.email, values.password, values.name);
-      // Redirect to dashboard upon successful signup/signin
-      navigate('/dashboard');
+      setSuccess(false);
+      
+      // Sign up the user
+      const result = await signUp(values.email, values.password, values.name);
+      
+      // If we have a session, user can be directly signed in
+      if (result?.session) {
+        navigate('/dashboard');
+      } else {
+        // User needs to confirm email
+        setSuccess(true);
+      }
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -54,6 +63,28 @@ const SignUp = () => {
       }
     }
   };
+
+  if (success) {
+    return (
+      <Card className="border-border/40 shadow-sm">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold">Check your email</CardTitle>
+          <CardDescription>We've sent you a confirmation link to complete your registration</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Alert className="mb-4 bg-green-50 text-green-700 border-green-200">
+            <CheckCircle2 className="h-4 w-4 text-green-600" />
+            <AlertDescription>Please check your email and click the confirmation link to activate your account.</AlertDescription>
+          </Alert>
+          <div className="text-center mt-6">
+            <Link to="/auth/login" className="text-primary hover:underline">
+              Back to login
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="border-border/40 shadow-sm">

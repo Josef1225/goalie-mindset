@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Session, User } from '@supabase/supabase-js';
@@ -9,7 +8,7 @@ type AuthContextType = {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name?: string) => Promise<any>; // Changed return type to Promise<any>
+  signUp: (email: string, password: string, name?: string) => Promise<any>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   updatePassword: (password: string) => Promise<void>;
@@ -76,17 +75,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Prepare metadata with name if provided
       const metadata = name ? { name } : undefined;
       
-      // First, try to sign up the user
+      // Sign up the user with email confirmation disabled
       const { error: signUpError, data: signUpData } = await supabase.auth.signUp({ 
         email, 
         password,
         options: {
           data: metadata,
+          emailRedirectTo: window.location.origin + '/dashboard',
         }
       });
       
-      // If there's an error with sign up that's not just "user already exists"
-      if (signUpError && !signUpError.message.includes('User already registered')) {
+      if (signUpError) {
         console.error("Sign up error:", signUpError);
         toast({
           title: "Error signing up",
@@ -96,34 +95,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw signUpError;
       }
       
-      // If user already exists or sign up was successful, try to sign in directly
-      const { error: signInError, data: signInData } = await supabase.auth.signInWithPassword({ 
-        email, 
-        password 
-      });
-      
-      if (signInError) {
-        console.error("Auto sign in error:", signInError);
+      // If signup was successful but email confirmation is required
+      if (signUpData?.user && !signUpData.session) {
         toast({
-          title: "Error signing in",
-          description: signInError.message,
-          variant: "destructive",
+          title: "Email confirmation required",
+          description: "Please check your email to confirm your account.",
         });
-        throw signInError;
+        return signUpData;
       }
       
-      // Update session and user state with sign in data
-      if (signInData?.session) {
-        setSession(signInData.session);
-        setUser(signInData.session.user);
+      // If signup was successful and session was created (email confirmation disabled)
+      if (signUpData?.session) {
+        setSession(signUpData.session);
+        setUser(signUpData.session.user);
         
         toast({
           title: "Success",
-          description: "Signed up and logged in successfully!",
+          description: "Signed up successfully!",
         });
       }
       
-      return signInData;
+      return signUpData;
     } catch (error) {
       console.error('Error in sign up process:', error);
       throw error;
