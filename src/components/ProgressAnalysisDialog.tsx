@@ -10,29 +10,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader2, BrainIcon } from "lucide-react";
 
-// Simple markdown formatter for our basic markdown needs
-const formatMarkdown = (text: string) => {
-  if (!text) return '';
-  
-  // Format headers
-  let formatted = text.replace(/## (.*?)\n/g, '<h2 class="text-xl font-bold mt-4 mb-2">$1</h2>');
-  formatted = formatted.replace(/### (.*?)\n/g, '<h3 class="text-lg font-semibold mt-3 mb-2">$1</h3>');
-  
-  // Format bold text
-  formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  
-  // Format paragraphs
-  formatted = formatted.replace(/\n\n/g, '</p><p class="my-2">');
-  
-  // Format lists
-  formatted = formatted.replace(/- (.*?)\n/g, '<li>$1</li>');
-  formatted = formatted.replace(/<li>(.*?)<\/li>/g, '<ul class="list-disc pl-5 my-2">$&</ul>');
-  formatted = formatted.replace(/<ul class="list-disc pl-5 my-2"><\/ul>/g, '');
-  formatted = formatted.replace(/<\/ul><ul class="list-disc pl-5 my-2">/g, '');
-  
-  return `<p class="my-2">${formatted}</p>`;
-};
-
 interface ProgressAnalysisDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -76,9 +53,9 @@ const ProgressAnalysisDialog: React.FC<ProgressAnalysisDialogProps> = ({
             </div>
           )}
           
-          {!loading && analysis && (
+          {!loading && !error && analysis && (
             <div className="prose prose-lg max-w-none p-4 bg-white/50 rounded-xl border border-border/40">
-              <div dangerouslySetInnerHTML={{ __html: formatMarkdown(analysis) }} />
+              <div dangerouslySetInnerHTML={{ __html: analysis.replace(/\n/g, '<br />') }} />
             </div>
           )}
           
