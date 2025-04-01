@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -183,19 +182,19 @@ const Home = () => {
           
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             <TestimonialCard 
-              text="\"This app changed my morning routine completely. I'm now more productive than ever.\""
+              text="This app changed my morning routine completely. I'm now more productive than ever."
               name="Emma S."
               role="Teacher"
               delay={0.2}
             />
             <TestimonialCard 
-              text="\"I've tried many habit trackers, but this one is different. Simple yet powerful.\""
+              text="I've tried many habit trackers, but this one is different. Simple yet powerful."
               name="Michael R."
               role="Designer"
               delay={0.4}
             />
             <TestimonialCard 
-              text="\"The analytics help me understand my patterns and make better choices.\""
+              text="The analytics help me understand my patterns and make better choices."
               name="Sarah J."
               role="Marketing Director"
               delay={0.6}
@@ -291,7 +290,7 @@ const TestimonialCard = ({ text, name, role, delay = 0 }) => {
       viewport={{ once: true }}
       className="bg-blue-50 p-6 rounded-xl border border-blue-100"
     >
-      <p className="text-gray-700 mb-4 italic">{text}</p>
+      <p className="text-gray-700 mb-4 italic">"{text}"</p>
       <div>
         <p className="font-semibold">{name}</p>
         <p className="text-sm text-gray-600">{role}</p>
