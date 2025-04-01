@@ -69,14 +69,14 @@ const ProgressAnalysisDialog: React.FC<ProgressAnalysisDialogProps> = ({
             </div>
           )}
           
-          {error && (
+          {error && !analysis && (
             <div className="p-6 bg-destructive/10 text-destructive rounded-xl border border-destructive/20">
               <p className="font-medium mb-2">Error</p>
               <p>{error}</p>
             </div>
           )}
           
-          {!loading && !error && analysis && (
+          {!loading && analysis && (
             <div className="prose prose-lg max-w-none p-4 bg-white/50 rounded-xl border border-border/40">
               <div dangerouslySetInnerHTML={{ __html: formatMarkdown(analysis) }} />
             </div>
