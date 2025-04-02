@@ -34,15 +34,17 @@ Focus on:
       
 Keep your response friendly, supportive, and concise (maximum 150 words).`;
 
-      // Make the API request to OpenAI
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      // Make the API request to OpenRouter
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer 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',
+          'Authorization': 'Bearer YOUR_OPENROUTER_API_KEY', // Replace with your actual OpenRouter API key
+          'HTTP-Referer': window.location.href,
+          'X-Title': 'Habit Tracker',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
+          model: 'YOUR_CHOSEN_MODEL', // Replace with your preferred model (e.g., 'anthropic/claude-3-opus')
           messages: [{ role: 'user', content: prompt }],
         }),
       });
