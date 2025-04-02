@@ -38,7 +38,7 @@ Keep your response friendly, supportive, and concise (maximum 150 words).`;
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer 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',
+          'Authorization': 'Bearer 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',
           'HTTP-Referer': window.location.href,
           'X-Title': 'Habit Tracker',
           'Content-Type': 'application/json',
