@@ -38,13 +38,13 @@ Keep your response friendly, supportive, and concise (maximum 150 words).`;
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer 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',
+          'Authorization': 'Bearer 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',
           'HTTP-Referer': window.location.href,
           'X-Title': 'Habit Tracker',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'deepseek/deepseek-r1:free',
+          model: 'deepseek/deepseek-v3-base:free',
           messages: [{ role: 'user', content: prompt }],
         }),
       });
