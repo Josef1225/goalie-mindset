@@ -23,6 +23,7 @@ const defaultHabit: Omit<Habit, 'id' | 'createdAt'> = {
   startDate: getTodayDate(),
   completedDates: [],
   streak: 0,
+  streakGoal: 7, // Default streak goal
   totalCompletions: 0,
   active: true,
 };
@@ -45,6 +46,7 @@ const CreateHabitDialog: React.FC<CreateHabitDialogProps> = ({
       startDate: initialHabit.startDate,
       completedDates: initialHabit.completedDates,
       streak: initialHabit.streak,
+      streakGoal: initialHabit.streakGoal || 7, // Default to 7 if not set
       totalCompletions: initialHabit.totalCompletions,
       active: initialHabit.active,
     } : defaultHabit
@@ -53,6 +55,14 @@ const CreateHabitDialog: React.FC<CreateHabitDialogProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const numberValue = parseInt(value, 10);
+    if (!isNaN(numberValue) && numberValue > 0) {
+      setFormData((prev) => ({ ...prev, [name]: numberValue }));
+    }
   };
 
   const handleFrequencyChange = (value: string) => {
@@ -122,6 +132,19 @@ const CreateHabitDialog: React.FC<CreateHabitDialogProps> = ({
                 <SelectItem value="custom">Custom</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="streakGoal">Streak Goal (Days)</Label>
+            <Input
+              id="streakGoal"
+              name="streakGoal"
+              type="number"
+              min="1"
+              value={formData.streakGoal}
+              onChange={handleNumberChange}
+              placeholder="e.g. 7"
+              className="rounded-md"
+            />
           </div>
         </div>
         <DialogFooter>

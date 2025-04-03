@@ -31,8 +31,9 @@ const HabitCard: React.FC<HabitCardProps> = ({
   const isCompleted = isHabitCompletedOnDate(habit, getTodayDate());
   const habitColor = habit.color || 'hsl(var(--primary))';
   
-  // Calculate a percentage for the progress bar (using streak as a proxy)
-  const progressValue = Math.min(habit.streak * 10, 100);
+  // Calculate progress as a percentage of current streak vs goal
+  const streakGoal = habit.streakGoal || 7; // Fallback to 7 if not set
+  const progressValue = Math.min((habit.streak / streakGoal) * 100, 100);
   
   return (
     <div 
@@ -44,6 +45,9 @@ const HabitCard: React.FC<HabitCardProps> = ({
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-3">
+          <div>
+            <h3 className="font-medium text-lg">{habit.name}</h3>
+          </div>
           <Button
             variant="ghost"
             size="icon"
@@ -59,9 +63,6 @@ const HabitCard: React.FC<HabitCardProps> = ({
               <div className="h-4 w-4 rounded-full border-2 border-current" />
             )}
           </Button>
-          <div>
-            <h3 className="font-medium text-lg">{habit.name}</h3>
-          </div>
         </div>
         
         <div className="flex items-center">
@@ -73,7 +74,7 @@ const HabitCard: React.FC<HabitCardProps> = ({
               "h-4 w-4 mr-1",
               isCompleted ? 'text-green-600' : 'text-gray-400'
             )} />
-            <span>{habit.streak} days</span>
+            <span>{habit.streak} / {streakGoal} days</span>
           </div>
           
           <DropdownMenu>

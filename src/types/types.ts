@@ -20,6 +20,7 @@ export interface Habit {
   startDate: string; // YYYY-MM-DD format
   completedDates: string[]; // Array of YYYY-MM-DD strings
   streak: number;
+  streakGoal: number; // New field for tracking streak goal
   totalCompletions: number;
   active: boolean;
   createdAt: string;
