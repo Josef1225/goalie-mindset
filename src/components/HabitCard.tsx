@@ -37,17 +37,13 @@ const HabitCard: React.FC<HabitCardProps> = ({
   return (
     <div 
       className={cn(
-        'bg-[#f5f0ff] rounded-xl p-4 shadow-sm relative overflow-hidden',
+        'bg-card rounded-xl p-4 shadow-sm relative overflow-hidden',
         'transition-all duration-300 transform hover:shadow-md animate-slide-up',
       )}
       style={{ animationDelay: `${animationDelay * 50}ms` }}
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-3">
-          <div className="text-purple-500">
-            <StarIcon className="h-5 w-5" />
-          </div>
-          
           <div>
             <h3 className="font-medium text-lg">{habit.name}</h3>
           </div>
@@ -97,7 +93,7 @@ const HabitCard: React.FC<HabitCardProps> = ({
       <div className="mt-3">
         <Progress 
           value={progressValue} 
-          className="h-2 bg-purple-100"
+          className="h-2 bg-gray-100"
           indicatorClassName="bg-gradient-to-r from-green-400 to-blue-500" 
         />
       </div>
