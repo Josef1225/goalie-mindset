@@ -4,7 +4,7 @@ import { Habit } from '@/types/types';
 import { isHabitCompletedOnDate, getTodayDate } from '@/utils/habitUtils';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { CheckIcon, MoreHorizontalIcon, StarIcon } from 'lucide-react';
+import { CheckIcon, MoreHorizontalIcon } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import {
   DropdownMenu,
@@ -98,7 +98,7 @@ const HabitCard: React.FC<HabitCardProps> = ({
         />
       </div>
       
-      <div className="absolute -bottom-2 -right-2 w-12 h-12 rounded-full flex items-center justify-center opacity-0">
+      <div className="flex justify-end mt-2">
         <Button
           variant="ghost"
           size="icon"
