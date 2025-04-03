@@ -44,6 +44,21 @@ const HabitCard: React.FC<HabitCardProps> = ({
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn(
+              'h-8 w-8 rounded-full transition-all duration-300',
+              isCompleted ? 'bg-primary/10 text-primary' : 'bg-secondary text-secondary-foreground hover:text-primary'
+            )}
+            onClick={() => onToggleCompletion(habit.id)}
+          >
+            {isCompleted ? (
+              <CheckIcon className="h-4 w-4" />
+            ) : (
+              <div className="h-4 w-4 rounded-full border-2 border-current" />
+            )}
+          </Button>
           <div>
             <h3 className="font-medium text-lg">{habit.name}</h3>
           </div>
@@ -96,24 +111,6 @@ const HabitCard: React.FC<HabitCardProps> = ({
           className="h-2 bg-gray-100"
           indicatorClassName="bg-gradient-to-r from-green-400 to-blue-500" 
         />
-      </div>
-      
-      <div className="flex justify-end mt-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          className={cn(
-            'h-10 w-10 rounded-full transition-all duration-300',
-            isCompleted ? 'bg-primary/10 text-primary' : 'bg-secondary text-secondary-foreground hover:text-primary'
-          )}
-          onClick={() => onToggleCompletion(habit.id)}
-        >
-          {isCompleted ? (
-            <CheckIcon className="h-5 w-5" />
-          ) : (
-            <div className="h-5 w-5 rounded-full border-2 border-current" />
-          )}
-        </Button>
       </div>
     </div>
   );

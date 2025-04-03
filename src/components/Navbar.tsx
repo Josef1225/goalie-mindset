@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { HomeIcon, ListTodoIcon, ActivityIcon, PlusIcon, User2Icon, BrainIcon } from 'lucide-react';
+import { HomeIcon, ListTodoIcon, ActivityIcon, PlusIcon, User2Icon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -71,18 +71,6 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateHabit }) => {
           <PlusIcon className="h-5 w-5 mr-2" />
           <span>Create Habit</span>
         </Button>
-        
-        <Link
-          to="/dashboard/stats"
-          className="flex items-center px-4 py-3 rounded-lg transition-colors text-muted-foreground hover:bg-secondary hover:text-foreground"
-          onClick={(e) => {
-            e.preventDefault();
-            // This will be linked to AI progress analysis
-          }}
-        >
-          <BrainIcon className="h-5 w-5" />
-          <span className="ml-3">AI Analysis</span>
-        </Link>
         
         {/* User profile dropdown */}
         <div className="mt-auto pt-6">
