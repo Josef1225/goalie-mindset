@@ -15,7 +15,7 @@ export const mapDbHabitToAppHabit = (dbHabit: any): Habit => {
     startDate: dbHabit.start_date,
     completedDates: [], // Will be populated separately
     streak: dbHabit.streak || 0,
-    streakGoal: dbHabit.streak_goal || 7, // Default to 7 if not set
+    streakGoal: dbHabit.streak_goal || 7, // Use the streak_goal from the database
     totalCompletions: dbHabit.total_completions || 0,
     active: dbHabit.active !== false, // Default to true
     createdAt: dbHabit.created_at || new Date().toISOString()
@@ -36,7 +36,7 @@ export const mapAppHabitToDbHabit = (habit: Habit, userId: string) => {
     reminder_time: habit.reminderTime || null,
     start_date: habit.startDate,
     streak: habit.streak,
-    streak_goal: habit.streakGoal || 7, // Add the streak goal with default value
+    streak_goal: habit.streakGoal || 7, // Include the streak_goal when mapping to DB
     total_completions: habit.totalCompletions,
     active: habit.active
   };

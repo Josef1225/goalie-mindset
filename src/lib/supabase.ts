@@ -55,6 +55,7 @@ export type Database = {
           reminder_time: string | null;
           start_date: string;
           streak: number;
+          streak_goal: number; // Add the streak_goal field to the database type
           total_completions: number;
           active: boolean;
           created_at: string;
@@ -80,6 +81,7 @@ export type Database = {
           reminder_time?: string | null;
           start_date: string;
           streak?: number;
+          streak_goal?: number; // Add the streak_goal field to Insert type
           total_completions?: number;
           active?: boolean;
           created_at?: string;
@@ -103,6 +105,7 @@ export type Database = {
           reminder_time?: string | null;
           start_date?: string;
           streak?: number;
+          streak_goal?: number; // Add the streak_goal field to Update type
           total_completions?: number;
           active?: boolean;
         };

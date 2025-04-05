@@ -54,6 +54,7 @@ export type Database = {
           reminder_time: string | null
           start_date: string
           streak: number | null
+          streak_goal: number
           time_of_day: Json | null
           total_completions: number | null
           user_id: string
@@ -70,6 +71,7 @@ export type Database = {
           reminder_time?: string | null
           start_date: string
           streak?: number | null
+          streak_goal?: number
           time_of_day?: Json | null
           total_completions?: number | null
           user_id: string
@@ -86,6 +88,7 @@ export type Database = {
           reminder_time?: string | null
           start_date?: string
           streak?: number | null
+          streak_goal?: number
           time_of_day?: Json | null
           total_completions?: number | null
           user_id?: string
