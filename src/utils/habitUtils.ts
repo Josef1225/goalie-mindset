@@ -149,6 +149,7 @@ export const getSampleHabits = (): Habit[] => {
       startDate: '2023-01-01',
       completedDates: [yesterdayStr, today],
       streak: 2,
+      streakGoal: 8, // Added streak goal
       totalCompletions: 2,
       active: true,
       createdAt: '2023-01-01',
@@ -164,6 +165,7 @@ export const getSampleHabits = (): Habit[] => {
       startDate: '2023-01-01',
       completedDates: [yesterdayStr],
       streak: 1,
+      streakGoal: 10, // Added streak goal
       totalCompletions: 1,
       active: true,
       createdAt: '2023-01-01',
@@ -179,6 +181,7 @@ export const getSampleHabits = (): Habit[] => {
       startDate: '2023-01-01',
       completedDates: [],
       streak: 0,
+      streakGoal: 5, // Added streak goal
       totalCompletions: 0,
       active: true,
       createdAt: '2023-01-01',
