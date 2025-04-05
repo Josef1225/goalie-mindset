@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { HomeIcon, ListTodoIcon, ActivityIcon, PlusIcon, User2Icon } from 'lucide-react';
+import { HomeIcon, ListTodoIcon, ActivityIcon, PlusIcon, User2Icon, HistoryIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -39,6 +39,11 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateHabit }) => {
       path: '/dashboard/stats',
       icon: <ActivityIcon className="h-5 w-5" />,
       label: 'Stats',
+    },
+    {
+      path: '/dashboard/history',
+      icon: <HistoryIcon className="h-5 w-5" />,
+      label: 'History',
     },
   ];
 
