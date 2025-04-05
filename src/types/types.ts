@@ -37,6 +37,8 @@ export interface HabitStats {
   habitId: string;
   habitName: string;
   streak: number;
+  streakGoal: number; // Added streakGoal property
+  streakProgress: number; // Added streakProgress property
   completionRate: number;
   totalCompletions: number;
   bestStreak: number;

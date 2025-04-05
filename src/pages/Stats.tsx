@@ -4,6 +4,7 @@ import { Habit, HabitStats } from '@/types/types';
 import ProgressCircle from '@/components/ProgressCircle';
 import { calculateHabitStats } from '@/utils/habitUtils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import {
   BarChart,
   Bar,
@@ -37,7 +38,7 @@ const Stats: React.FC<StatsProps> = ({ habits }) => {
   // Prepare data for chart
   const chartData = habitStats.map(stat => ({
     name: stat.habitName,
-    completionRate: stat.completionRate,
+    streakProgress: stat.streakProgress, // Changed to use streak progress
   }));
 
   return (
@@ -83,7 +84,7 @@ const Stats: React.FC<StatsProps> = ({ habits }) => {
       {habits.length > 0 && (
         <Card className="rounded-xl border border-border/50 shadow-sm overflow-hidden">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg">Completion Rate by Habit</CardTitle>
+            <CardTitle className="text-lg">Streak Progress by Habit</CardTitle>
           </CardHeader>
           <CardContent className="px-0">
             <div className="h-64 w-full">
@@ -105,7 +106,7 @@ const Stats: React.FC<StatsProps> = ({ habits }) => {
                     tickFormatter={(value) => `${value}%`}
                   />
                   <Bar
-                    dataKey="completionRate"
+                    dataKey="streakProgress"
                     fill="hsl(var(--primary))"
                     radius={[4, 4, 0, 0]}
                     animationDuration={1500}
@@ -131,12 +132,19 @@ const Stats: React.FC<StatsProps> = ({ habits }) => {
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-medium">
-                    Current Streak: {stat.streak}
+                    Streak: {stat.streak}/{stat.streakGoal}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Completion: {stat.completionRate}%
+                    Progress: {stat.streakProgress}%
                   </p>
                 </div>
+              </div>
+              <div className="mt-3">
+                <Progress 
+                  value={stat.streakProgress} 
+                  className="h-2"
+                  indicatorClassName={stat.streakProgress === 100 ? "bg-green-500" : undefined}
+                />
               </div>
             </CardContent>
           </Card>

@@ -1,4 +1,3 @@
-
 import { Habit, DailyProgress, HabitStats } from '../types/types';
 
 // Generate a unique ID
@@ -107,7 +106,7 @@ export const calculateDailyProgress = (
   };
 };
 
-// Calculate habit statistics
+// Calculate habit statistics with progress towards streak goal
 export const calculateHabitStats = (habit: Habit): HabitStats => {
   const totalDays = habit.active 
     ? Math.floor((new Date().getTime() - new Date(habit.startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
@@ -119,11 +118,18 @@ export const calculateHabitStats = (habit: Habit): HabitStats => {
   const completionRate = requiredDays > 0 
     ? (habit.totalCompletions / requiredDays) * 100 
     : 0;
+    
+  // Calculate progress towards streak goal
+  const streakProgress = habit.streakGoal > 0 
+    ? (habit.streak / habit.streakGoal) * 100 
+    : 0;
 
   return {
     habitId: habit.id,
     habitName: habit.name,
     streak: habit.streak,
+    streakGoal: habit.streakGoal,
+    streakProgress: Math.min(100, Math.round(streakProgress)), // Cap at 100%
     completionRate: Math.round(completionRate * 10) / 10, // Round to 1 decimal place
     totalCompletions: habit.totalCompletions,
     bestStreak: habit.streak, // This is simplified, ideally we'd track best streak separately
