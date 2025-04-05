@@ -52,6 +52,29 @@ const CreateHabitDialog: React.FC<CreateHabitDialogProps> = ({
     } : defaultHabit
   );
 
+  // Reset form data when the dialog opens or initialHabit changes
+  React.useEffect(() => {
+    if (open) {
+      setFormData(
+        initialHabit ? {
+          name: initialHabit.name,
+          description: initialHabit.description || '',
+          icon: initialHabit.icon,
+          color: initialHabit.color,
+          frequency: initialHabit.frequency,
+          timeOfDay: initialHabit.timeOfDay,
+          reminderTime: initialHabit.reminderTime,
+          startDate: initialHabit.startDate,
+          completedDates: initialHabit.completedDates,
+          streak: initialHabit.streak,
+          streakGoal: initialHabit.streakGoal || 7,
+          totalCompletions: initialHabit.totalCompletions,
+          active: initialHabit.active,
+        } : defaultHabit
+      );
+    }
+  }, [open, initialHabit]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -73,16 +96,26 @@ const CreateHabitDialog: React.FC<CreateHabitDialogProps> = ({
   };
 
   const handleSave = () => {
+    // Validate form data
+    if (!formData.name.trim()) {
+      alert('Habit name is required');
+      return;
+    }
+
+    // Ensure streak goal is at least 1
+    if (!formData.streakGoal || formData.streakGoal < 1) {
+      formData.streakGoal = 7; // Default to 7 if invalid
+    }
+
+    // Create a new habit or update an existing one
     const newHabit: Habit = {
       id: initialHabit?.id || generateId(),
       createdAt: initialHabit?.createdAt || new Date().toISOString(),
       ...formData,
     };
+
     onSave(newHabit);
     onOpenChange(false);
-    if (!initialHabit) {
-      setFormData(defaultHabit);
-    }
   };
 
   return (
@@ -103,6 +136,7 @@ const CreateHabitDialog: React.FC<CreateHabitDialogProps> = ({
               onChange={handleChange}
               placeholder="e.g. Drink Water"
               className="rounded-md"
+              required
             />
           </div>
           <div className="grid gap-2">
@@ -144,6 +178,7 @@ const CreateHabitDialog: React.FC<CreateHabitDialogProps> = ({
               onChange={handleNumberChange}
               placeholder="e.g. 7"
               className="rounded-md"
+              required
             />
           </div>
         </div>
