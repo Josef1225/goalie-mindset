@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Habit } from '@/types/types';
@@ -5,6 +6,7 @@ import Dashboard from './Dashboard';
 import Habits from './Habits';
 import Stats from './Stats';
 import Layout from '@/components/Layout';
+import HabitHistory from '@/components/HabitHistory';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -152,6 +154,7 @@ const Index = () => {
           />
         } />
         <Route path="stats" element={<Stats habits={habits} />} />
+        <Route path="history" element={<HabitHistory habits={habits} />} />
       </Route>
     </Routes>
   );
