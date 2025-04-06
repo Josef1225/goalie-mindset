@@ -36,6 +36,16 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.6rem;
+    
+    /* Sidebar colors - added for consistency */
+    --sidebar-background: var(--card);
+    --sidebar-foreground: var(--card-foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
   }
 
   .dark {
@@ -66,6 +76,16 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+    
+    /* Sidebar colors - dark mode */
+    --sidebar-background: var(--card);
+    --sidebar-foreground: var(--card-foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
   }
 }
 
@@ -138,5 +158,43 @@
   /* Glass effect for dialogs and modals */
   .glass-effect {
     @apply bg-white/80 backdrop-blur-md border border-white/20;
+  }
+  
+  /* Mobile specific styles - added for responsiveness */
+  @media (max-width: 640px) {
+    .container {
+      @apply px-4;
+    }
+    
+    h1 {
+      @apply text-xl;
+    }
+    
+    h2 {
+      @apply text-lg;
+    }
+    
+    .mobile-pb-safe {
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5rem);
+    }
+    
+    .mobile-full-width {
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+    }
+  }
+  
+  /* Safe area insets for mobile devices */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Modal and popover improvements for mobile */
+  .mobile-friendly-popover {
+    @apply max-h-[80vh] overflow-auto;
   }
 }

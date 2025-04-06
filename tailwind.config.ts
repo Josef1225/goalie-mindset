@@ -22,6 +22,9 @@ export default {
 			fontFamily: {
 				sans: ['Inter', 'system-ui', 'sans-serif'],
 			},
+			screens: {
+				'xs': '480px',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -110,6 +113,10 @@ export default {
 				'slide-up': 'slide-up 0.4s ease-out',
 				'slide-down': 'slide-down 0.4s ease-out',
 				'progress-fill': 'progress-fill 1s ease-out forwards'
+			},
+			spacing: {
+				'safe-bottom': 'env(safe-area-inset-bottom)',
+				'safe-top': 'env(safe-area-inset-top)',
 			}
 		}
 	},

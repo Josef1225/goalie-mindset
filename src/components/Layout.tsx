@@ -6,6 +6,7 @@ import CreateHabitDialog from './CreateHabitDialog';
 import { Habit } from '@/types/types';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
+import { useBreakpoint } from '@/hooks/useBreakpoint';
 
 interface LayoutProps {
   habits: Habit[];
@@ -15,6 +16,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ habits, onAddHabit }) => {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const { toast } = useToast();
+  const isDesktop = useBreakpoint('lg');
 
   const handleSaveHabit = (habit: Habit) => {
     onAddHabit(habit);
@@ -39,10 +41,19 @@ const Layout: React.FC<LayoutProps> = ({ habits, onAddHabit }) => {
             </div>
           </div>
           
-          {/* Main content area */}
-          <div className="w-full lg:ml-64 p-6">
+          {/* Main content area - adjusted padding for mobile */}
+          <div className="w-full lg:ml-64 p-4 md:p-6 pb-20 lg:pb-6">
             <div className="max-w-5xl mx-auto">
+              {/* Mobile header for branding - only show on small screens */}
+              <div className="lg:hidden flex items-center justify-between mb-6 pt-2">
+                <h1 className="text-xl font-bold text-primary">HabitTracker</h1>
+              </div>
+              
+              {/* Page content */}
               <Outlet />
+              
+              {/* Spacing div to ensure content isn't hidden behind mobile nav */}
+              <div className="h-16 lg:hidden"></div>
             </div>
           </div>
         </div>
