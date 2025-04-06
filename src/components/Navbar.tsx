@@ -105,16 +105,17 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateHabit }) => {
         </div>
       </div>
 
-      {/* Mobile Bottom Navigation - Enhanced */}
+      {/* Mobile Bottom Navigation - Fixed layout to prevent overlay issues */}
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border/50 backdrop-blur-lg z-30 lg:hidden safe-bottom">
         <div className="container max-w-md mx-auto px-4">
-          <div className="flex items-center justify-around py-2 relative">
+          <div className="flex items-center justify-around py-2">
+            {/* Equal width for all navigation items */}
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  'flex flex-col items-center justify-center px-3 py-2 rounded-md transition-colors',
+                  'flex flex-col items-center justify-center py-2 flex-1',
                   currentPath === item.path
                     ? 'text-primary'
                     : 'text-muted-foreground hover:text-foreground'
@@ -125,22 +126,12 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateHabit }) => {
               </Link>
             ))}
             
-            {/* Create button - made more visually distinct for mobile */}
-            <Button
-              onClick={onCreateHabit}
-              className="h-12 w-12 rounded-full shadow-lg absolute -top-6 bg-primary hover:bg-primary/90"
-              size="icon"
-            >
-              <PlusIcon className="h-5 w-5" />
-              <span className="sr-only">Create Habit</span>
-            </Button>
-
-            {/* User profile dropdown - simplified for mobile */}
+            {/* User profile dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex flex-col items-center justify-center px-3 py-2 rounded-md"
+                  className="flex flex-col items-center justify-center py-2 flex-1"
                   size="sm"
                 >
                   <User2Icon className="h-5 w-5" />
@@ -163,6 +154,16 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateHabit }) => {
           </div>
         </div>
       </div>
+      
+      {/* Floating action button for creating habits */}
+      <Button
+        onClick={onCreateHabit}
+        className="lg:hidden h-14 w-14 rounded-full shadow-lg fixed right-5 bottom-20 bg-primary hover:bg-primary/90 z-40"
+        size="icon"
+      >
+        <PlusIcon className="h-6 w-6" />
+        <span className="sr-only">Create Habit</span>
+      </Button>
     </>
   );
 };

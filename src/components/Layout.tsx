@@ -53,7 +53,7 @@ const Layout: React.FC<LayoutProps> = ({ habits, onAddHabit }) => {
               <Outlet />
               
               {/* Spacing div to ensure content isn't hidden behind mobile nav */}
-              <div className="h-16 lg:hidden"></div>
+              <div className="h-24 lg:hidden"></div>
             </div>
           </div>
         </div>
