@@ -53,7 +53,7 @@ const Home = () => {
           </motion.div>
         </div>
         
-        {/* Floating cards showcase */}
+        {/* Updated habit card showcase to match the provided image */}
         <motion.div 
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -63,11 +63,10 @@ const Home = () => {
           <div className="relative h-[300px] md:h-[400px] overflow-hidden rounded-xl shadow-2xl border border-blue-100">
             <div className="absolute inset-0 bg-gradient-to-br from-white/90 to-blue-50/90 backdrop-blur-sm z-10"></div>
             <div className="absolute top-10 left-4 right-4 grid grid-cols-1 md:grid-cols-3 gap-4 z-20">
-              <HabitCard 
+              {/* Updated habit card to match the screenshot */}
+              <AccurateHabitCard 
                 title="Morning Meditation" 
-                streak={8} 
-                color="bg-gradient-to-br from-purple-50 to-purple-100"
-                icon={<Star className="h-5 w-5 text-purple-500" />}
+                streak={8}
                 delay={0.6}
               />
               <HabitCard 
@@ -244,13 +243,13 @@ const Home = () => {
   );
 };
 
-// Animated Feature Card component
+// Existing Feature Card component
 const FeatureCard = ({ icon, title, description, delay = 0 }) => {
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
       viewport={{ once: true }}
       className="flex flex-col items-center text-center p-6 rounded-xl bg-white border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300"
     >
@@ -261,13 +260,13 @@ const FeatureCard = ({ icon, title, description, delay = 0 }) => {
   );
 };
 
-// Animated Step Card component
+// Existing Step Card component
 const StepCard = ({ number, title, description, delay = 0 }) => {
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
       viewport={{ once: true }}
       className="flex flex-col items-center text-center p-6 relative z-10"
     >
@@ -280,13 +279,13 @@ const StepCard = ({ number, title, description, delay = 0 }) => {
   );
 };
 
-// Testimonial Card component
+// Existing Testimonial Card component
 const TestimonialCard = ({ text, name, role, delay = 0 }) => {
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
       viewport={{ once: true }}
       className="bg-blue-50 p-6 rounded-xl border border-blue-100"
     >
@@ -299,7 +298,42 @@ const TestimonialCard = ({ text, name, role, delay = 0 }) => {
   );
 };
 
-// Habit Card component for hero section
+// New Accurate Habit Card component that matches the provided screenshot
+const AccurateHabitCard = ({ title, streak, delay = 0 }) => {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay, duration: 0.4 }}
+      className="bg-purple-50 p-5 rounded-lg shadow-md"
+    >
+      <div className="flex items-start justify-between mb-2">
+        <div className="flex items-start gap-2">
+          <Star className="h-5 w-5 text-purple-500 mt-1" />
+          <div>
+            <h3 className="font-medium text-xl">{title}</h3>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-1">
+          <CheckCircle className="h-4 w-4 text-green-500" />
+          <span className="font-medium text-gray-700">
+            {streak} days
+          </span>
+        </div>
+      </div>
+      
+      <div className="mt-6">
+        <div className="w-full bg-white/50 rounded-full h-2.5">
+          <div className="bg-gradient-to-r from-green-400 to-blue-500 h-2.5 rounded-full" 
+              style={{ width: `${Math.min(streak * 10, 100)}%` }}></div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Keep existing Habit Card component for the other cards
 const HabitCard = ({ title, streak, color, icon, delay = 0 }) => {
   return (
     <motion.div 
