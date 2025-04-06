@@ -1,3 +1,4 @@
+
 import { Habit, DailyProgress, HabitStats } from '../types/types';
 
 // Generate a unique ID
@@ -134,6 +135,11 @@ export const calculateHabitStats = (habit: Habit): HabitStats => {
     totalCompletions: habit.totalCompletions,
     bestStreak: habit.streak, // This is simplified, ideally we'd track best streak separately
   };
+};
+
+// Check if a habit has reached its streak goal
+export const hasReachedStreakGoal = (habit: Habit): boolean => {
+  return habit.streak >= habit.streakGoal;
 };
 
 // Get sample data for initial app state
