@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader2, BrainIcon, LightbulbIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ProgressAnalysisDialogProps {
   open: boolean;
@@ -90,16 +91,21 @@ const ProgressAnalysisDialog: React.FC<ProgressAnalysisDialogProps> = ({
           {!loading && !error && analysis && (
             <Card className="overflow-hidden">
               <CardContent className="p-0">
-                <div className="p-5 bg-gradient-to-br from-blue-50 to-white border-b">
-                  <div className="flex items-center gap-2 mb-3">
-                    <LightbulbIcon className="h-5 w-5 text-primary" />
-                    <h3 className="font-medium text-primary">Analysis & Insights</h3>
+                <div className="bg-gradient-to-br from-blue-50 to-white border-b">
+                  <div className="p-5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <LightbulbIcon className="h-5 w-5 text-primary" />
+                      <h3 className="font-medium text-primary">Analysis & Insights</h3>
+                    </div>
+                    
+                    {/* Add ScrollArea for better UX with long content */}
+                    <ScrollArea className="h-[300px] pr-4">
+                      <div 
+                        className="prose prose-sm md:prose-base prose-headings:mb-2 prose-headings:mt-4 prose-p:my-1 max-w-none" 
+                        dangerouslySetInnerHTML={{ __html: formatContent(analysis) }} 
+                      />
+                    </ScrollArea>
                   </div>
-                  
-                  <div 
-                    className="prose prose-sm md:prose-base prose-headings:mb-2 prose-headings:mt-4 prose-p:my-1 max-w-none" 
-                    dangerouslySetInnerHTML={{ __html: formatContent(analysis) }} 
-                  />
                 </div>
                 
                 <div className="p-4 bg-muted/20 border-t">

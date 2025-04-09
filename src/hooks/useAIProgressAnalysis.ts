@@ -1,24 +1,42 @@
 
 import { useState } from 'react';
 import { Habit } from '@/types/types';
+import { fetchAllHabits } from '@/services/habitService';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function useAIProgressAnalysis() {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
   const getProgressAnalysis = async (habits: Habit[]) => {
     setLoading(true);
     setError(null);
     
     try {
+      // Fetch ALL habits including completed ones for better analysis
+      let habitsToAnalyze = habits;
+      
+      // If we have a user ID, fetch the complete habit history
+      if (user?.id) {
+        try {
+          habitsToAnalyze = await fetchAllHabits(user.id);
+        } catch (err) {
+          console.error("Error fetching all habits for analysis:", err);
+          // Continue with provided habits if fetch fails
+        }
+      }
+      
       // Prepare the data about habits for analysis
-      const habitsData = habits.map(habit => ({
+      const habitsData = habitsToAnalyze.map(habit => ({
         name: habit.name,
         streak: habit.streak,
         totalCompletions: habit.totalCompletions,
         completedDates: habit.completedDates,
         startDate: habit.startDate,
+        streakGoal: habit.streakGoal,
+        active: habit.active,
       }));
       
       // Create the enhanced prompt for the AI
