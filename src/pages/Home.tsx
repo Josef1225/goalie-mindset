@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, CheckCircle, Calendar, BarChart2, Zap, Star, Shield, TrendingUp } from 'lucide-react';
+import { ArrowRight, CheckCircle, Calendar, BarChart2, Zap, Star, Shield, TrendingUp, HelpCircle, Brain } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Home = () => {
@@ -85,6 +85,21 @@ const Home = () => {
               icon={<Zap className="h-10 w-10 text-primary" />}
               title="Build Consistency"
               description="Develop lasting habits through consistency. Our app helps you stay on track even when life gets busy."
+              delay={0.6}
+            />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto mt-8">
+            <FeatureCard 
+              icon={<Brain className="h-10 w-10 text-primary" />}
+              title="AI-Powered Insights"
+              description="Get personalized feedback and habit suggestions from our AI assistant to optimize your habit-building journey."
+              delay={0.4}
+            />
+            <FeatureCard 
+              icon={<HelpCircle className="h-10 w-10 text-primary" />}
+              title="Comprehensive Help"
+              description="Access detailed tutorials, tips and documentation to maximize your success with habit building strategies."
               delay={0.6}
             />
           </div>
@@ -209,7 +224,6 @@ const Home = () => {
   );
 };
 
-// Existing Feature Card component
 const FeatureCard = ({ icon, title, description, delay = 0 }) => {
   return (
     <motion.div 
@@ -226,7 +240,6 @@ const FeatureCard = ({ icon, title, description, delay = 0 }) => {
   );
 };
 
-// Existing Step Card component
 const StepCard = ({ number, title, description, delay = 0 }) => {
   return (
     <motion.div 
@@ -245,7 +258,6 @@ const StepCard = ({ number, title, description, delay = 0 }) => {
   );
 };
 
-// Existing Testimonial Card component
 const TestimonialCard = ({ text, name, role, delay = 0 }) => {
   return (
     <motion.div 

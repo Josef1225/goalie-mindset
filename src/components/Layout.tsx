@@ -3,10 +3,13 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import CreateHabitDialog from './CreateHabitDialog';
+import HelpDialog from './HelpDialog';
 import { Habit } from '@/types/types';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
+import { HelpCircle } from 'lucide-react';
+import { Button } from './ui/button';
 
 interface LayoutProps {
   habits: Habit[];
@@ -15,6 +18,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ habits, onAddHabit }) => {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [helpDialogOpen, setHelpDialogOpen] = useState(false);
   const { toast } = useToast();
   const isDesktop = useBreakpoint('lg');
 
@@ -38,6 +42,18 @@ const Layout: React.FC<LayoutProps> = ({ habits, onAddHabit }) => {
               <nav className="space-y-1">
                 <Navbar onCreateHabit={() => setCreateDialogOpen(true)} />
               </nav>
+              
+              {/* Help button for desktop */}
+              <div className="mt-8 pt-4 border-t border-border/30">
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-muted-foreground hover:text-foreground"
+                  onClick={() => setHelpDialogOpen(true)}
+                >
+                  <HelpCircle className="h-5 w-5 mr-2" />
+                  Help & Documentation
+                </Button>
+              </div>
             </div>
           </div>
           
@@ -47,6 +63,17 @@ const Layout: React.FC<LayoutProps> = ({ habits, onAddHabit }) => {
               {/* Mobile header for branding - only show on small screens */}
               <div className="lg:hidden flex items-center justify-between mb-6 pt-2">
                 <h1 className="text-xl font-bold text-primary">HabitTracker</h1>
+                
+                {/* Help button for mobile */}
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-muted-foreground"
+                  onClick={() => setHelpDialogOpen(true)}
+                >
+                  <HelpCircle className="h-5 w-5" />
+                  <span className="sr-only">Help</span>
+                </Button>
               </div>
               
               {/* Page content */}
@@ -68,6 +95,11 @@ const Layout: React.FC<LayoutProps> = ({ habits, onAddHabit }) => {
         open={createDialogOpen}
         onOpenChange={setCreateDialogOpen}
         onSave={handleSaveHabit}
+      />
+      
+      <HelpDialog
+        open={helpDialogOpen}
+        onOpenChange={setHelpDialogOpen}
       />
       
       <Toaster />

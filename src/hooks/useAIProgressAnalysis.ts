@@ -21,18 +21,31 @@ export function useAIProgressAnalysis() {
         startDate: habit.startDate,
       }));
       
-      // Create the prompt for the AI
-      const prompt = `Please analyze my habit tracking data and provide encouraging feedback on my progress:
+      // Create the enhanced prompt for the AI
+      const prompt = `Please analyze my habit tracking data and provide encouraging, constructive feedback on my progress:
       
 ${JSON.stringify(habitsData, null, 2)}
 
 Focus on:
-1. Streaks and consistency
-2. Overall progress
-3. Suggestions for improvement
-4. Encouraging comments
-      
-Keep your response friendly, supportive, and concise (maximum 150 words).`;
+1. Streaks and consistency - highlight my achievements
+2. Overall progress and patterns
+3. Specific, actionable suggestions for improvement
+4. Encouraging comments that acknowledge my efforts
+5. Suggest 2-3 NEW complementary habits that would work well with my existing habits (be specific and explain WHY they would be beneficial)
+
+For suggested habits, consider common habits like:
+- Meditation/mindfulness
+- Reading
+- Exercise variations (walking, running, strength training)
+- Journaling
+- Learning a new skill
+- Healthy eating habits
+- Social connection habits
+- Sleep hygiene practices
+- Gratitude practices
+- Creativity habits
+
+Your response should be supportive, constructive, and motivating. Format your response with clear sections using markdown (headers, bullet points, etc.). Maximum 250 words.`;
 
       // Make the API request to OpenRouter
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
